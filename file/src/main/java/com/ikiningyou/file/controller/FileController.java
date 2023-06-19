@@ -34,7 +34,7 @@ public class FileController {
     boolean isSuccessed = fileService.confirmImagesByContentId(
       imageConfirmRequest
     );
-    return ResponseEntity.status(isSuccessed ? 200 : 201).body(isSuccessed);
+    return ResponseEntity.status(isSuccessed ? 200 : 400).body(isSuccessed);
   }
 
   @PostMapping("/upload/single")
