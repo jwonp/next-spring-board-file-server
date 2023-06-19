@@ -33,20 +33,21 @@ public class FileService {
   }
 
   @Transactional
-  public boolean setContentId(String fileNameOnStorage, Long contentId) {
+  public boolean setContentId(
+    String author,
+    String fileNameOnStorage,
+    Long contentId
+  ) {
     try {
       Optional<File> rowFile = fileRepo.findByFileNameOnStorage(
         fileNameOnStorage
       );
+
       if (rowFile.isPresent()) {
         File file = rowFile.get();
-        log.info(
-          "content id :{} / on storage :{} / original :{} / path :{}",
-          file.getContentId(),
-          file.getFileNameOnStorage(),
-          file.getOriginalName(),
-          file.getPath()
-        );
+        if (file.getPath() != "/" + author + "/") {
+          return false;
+        }
         file.setContentId(contentId);
         fileRepo.save(file);
       }
@@ -59,6 +60,8 @@ public class FileService {
   public boolean confirmImagesByContentId(
     ImageConfirmRequest imageConfirmRequest
   ) {
+    imageConfirmRequest.getAuthor();
+
     List<String> images = Arrays.asList(imageConfirmRequest.getImages());
     List<Boolean> isImageConfirmed = new ArrayList<Boolean>();
 
@@ -66,6 +69,7 @@ public class FileService {
       .stream()
       .forEach(image -> {
         boolean isConfirmed = setContentId(
+          imageConfirmRequest.getAuthor(),
           image,
           imageConfirmRequest.getContentId()
         );
