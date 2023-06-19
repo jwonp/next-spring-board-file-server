@@ -65,12 +65,10 @@ public class FileService {
     images
       .stream()
       .forEach(image -> {
-        log.info("this image is {}", image);
         boolean isConfirmed = setContentId(
           image,
           imageConfirmRequest.getContentId()
         );
-        log.info("is comfirmed ? {}", isConfirmed);
         isImageConfirmed.add(isConfirmed);
       });
 
